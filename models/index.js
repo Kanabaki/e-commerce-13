@@ -5,12 +5,21 @@ const Tag = require('./Tag');
 const ProductTag = require('./ProductTag');
 
 // Products belongsTo Category
-
+Product.belongsTo(Category,{
+  foreignKey: 'category_id'
+})
 // Categories have many Products
-
+Category.hasMany(Product,{
+  foreignKey: 'category_id',
+  onDelete: 'cascade'
+})
 // Products belongToMany Tags (through ProductTag)
-
+// so about the foreign keys below ...the associations have the Junction Table ProductTag,
+// so is there a need to add foreign keys if the ProductTag already has the keys? But if I go by this
+// logic, then I don't need to do so for the associations above. 
+Product.belongsToMany(Tag,{ through: ProductTag, foreignKey: 'product_id'}) 
 // Tags belongToMany Products (through ProductTag)
+Tag.belongsToMany(Product,{ through: ProductTag, foreignKey: 'tag_id'}) 
 
 module.exports = {
   Product,
