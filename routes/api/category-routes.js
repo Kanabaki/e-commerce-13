@@ -3,26 +3,86 @@ const { Category, Product } = require('../../models');
 
 // The `/api/categories` endpoint
 
-router.get('/', (req, res) => {
-  // find all categories
-  // be sure to include its associated Products
+// GET WORKS ===============================================
+router.get('/', async (req, res) => {
+  // finds all categories & includes its associated Products
+try {
+const categoryData = await Category.findAll({include: [{model: Product}]})
+res.status(200).json(categoryData);
+} catch (err) {
+  res.status(500).json(err);
+}
 });
 
-router.get('/:id', (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
+// GET ONE WORKS ==============================================
+router.get('/:id', async (req, res) => {
+  // find one category by its `id` value & includes its associated Products
+try {
+const categoryData = await Category.findByPk(req.params.id, {
+  include: [{model:Product}],
+});
+if (!categoryData) {
+  res.status(404).json({ message: "No Categories found with that id! ぞのIDのカテゴリは見つかりませんでした！"})
+return;
+}
+res.status(200).json(categoryData);
+} catch (err) {
+  res.status(500).json(err);
+}
 });
 
-router.post('/', (req, res) => {
+// CREATE CATEGORY WORKS ========================================
+router.post('/', async (req, res) => {
   // create a new category
+   /* req.body should look like this...
+    {
+      category_name: "Basketball",
+    }
+  */
+  try {
+// every category has an id and a category_name
+const newCategory = await Category.create(req.body);
+res.status(200).json(newCategory);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
-router.put('/:id', (req, res) => {
+
+// PUT ROUTE WORKS =================================================
+router.put('/:id', async (req, res) => {
   // update a category by its `id` value
+try {
+  const categoryData = await Category.update(req.body, {
+where: { id: req.params.id}
+});
+if (!categoryData) {
+  res.status(404).json({message: "No Category found with that ID! そのIDのカテゴリが見つかりませんでした"})
+return;
+}
+res.status(200).json(categoryData);
+// I could prob do something here. I get back a json 1 boolean and
+// I could probably send a success message back for more clarity
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.delete('/:id', (req, res) => {
+// DELETE route works ==================================================
+router.delete('/:id', async (req, res) => {
   // delete a category by its `id` value
+  try {
+const deleteCategoryData = await Category.destroy({
+where: {id: req.params.id}
+});
+if (!deleteCategoryData) {
+  res.status(404).json({message: "No Category found with that ID! そのIDのカテゴリが見つかりませんでした"})
+return;
+}
+res.status(200).json(deleteCategoryData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
