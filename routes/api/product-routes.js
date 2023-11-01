@@ -69,16 +69,21 @@ router.post('/', (req, res) => {
 
 
 // update product works =======================================================
+// what is even happenning here????? We're importing ProductTag...for what?
+
 router.put('/:id', (req, res) => {
-  // update product data
+  // update product data, I guess this .update targets a product by id
+  // 1st update param is the new data to update with
+  // 2nd param is is an argument object that holds options. Here we specify WHERE
   Product.update(req.body, {
     where: {
       id: req.params.id,
     },
-  })
+  }) // if the update is successful it turns into a promise here and then you can .then
     .then((product) => {
       if (req.body.tagIds && req.body.tagIds.length) {
-
+// find all Product & Tag associations. If you update products then you also need to update
+// the tags is what I'm guessing 
         ProductTag.findAll({
           where: { product_id: req.params.id }
         }).then((productTags) => {
