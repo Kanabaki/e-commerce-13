@@ -38,6 +38,14 @@ router.get('/:id', async (req, res) => {
 // create new product works ===============================================
 router.post('/', (req, res) => {
   /* req.body should look like this...
+  this is a product create
+{
+	"product_name": "Nobue Ito Figure",
+	"price": 175.99,
+	"stock": 3,
+	"category_id": 7 idk about this one if it's needed
+  tagIds: []
+}
     {
       product_name: "Basketball",
       price: 200.00,

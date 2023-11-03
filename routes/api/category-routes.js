@@ -61,8 +61,6 @@ if (!categoryData) {
 return;
 }
 res.status(200).json(categoryData);
-// I could prob do something here. I get back a json 1 boolean and
-// I could probably send a success message back for more clarity
   } catch (err) {
     res.status(500).json(err);
   }
